@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 		switchButton = (ToggleButton)findViewById(R.id.switch_button);
 		SwitchButtonListener switchButtonListener = new SwitchButtonListener();
 		switchButton.setOnClickListener(switchButtonListener);
-		
+		torchOpen();
 	}
 	
 	class SwitchButtonListener implements OnClickListener{
@@ -40,34 +40,43 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated method stub
 			ToggleButton button = (ToggleButton)v;
 			if(!button.isChecked()){
-				if(camera == null){
-					camera = Camera.open();
-				}
-				Parameters p = camera.getParameters();
-				p.setFlashMode(Parameters.FLASH_MODE_TORCH);
-				camera.setParameters(p);
-				camera.startPreview();
-				button.setButtonDrawable(R.drawable.open);
-				background.setBackgroundColor(Color.BLACK);
+
+				torchOpen();
 			}else {
-				if(camera == null){
-					camera = Camera.open();
-				}
-				Parameters p = camera.getParameters();
-				p.setFlashMode(Parameters.FLASH_MODE_OFF);
-				camera.setParameters(p);
-				camera.stopPreview();
-				background.setBackgroundColor(Color.WHITE);
-				button.setButtonDrawable(R.drawable.close);
-				if(camera != null){
-					camera.setPreviewCallback(null);
-					camera.stopPreview();
-					camera.release();
-					camera = null; 
-				}
+				torchClose();
 			}
 		}
 		
+	}
+	
+	private void torchOpen(){
+		if(camera == null){
+			camera = Camera.open();
+		}
+		Parameters p = camera.getParameters();
+		p.setFlashMode(Parameters.FLASH_MODE_TORCH);
+		camera.setParameters(p);
+		camera.startPreview();
+		switchButton.setButtonDrawable(R.drawable.open);
+		background.setBackgroundColor(Color.BLACK);
+	}
+	
+	private void torchClose(){
+		if(camera == null){
+			camera = Camera.open();
+		}
+		Parameters p = camera.getParameters();
+		p.setFlashMode(Parameters.FLASH_MODE_OFF);
+		camera.setParameters(p);
+		camera.stopPreview();
+		background.setBackgroundColor(Color.WHITE);
+		switchButton.setButtonDrawable(R.drawable.close);
+		if(camera != null){
+			camera.setPreviewCallback(null);
+			camera.stopPreview();
+			camera.release();
+			camera = null; 
+		}
 	}
 
 	@Override
